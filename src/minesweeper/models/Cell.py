@@ -29,6 +29,6 @@ cA2 = Cell(False, False, True, 1)  # Mine !
 cA3 = Cell(False, True, False, 1)
 
 # print(cA1)
-cA1.reveal_cell()
-cA2.reveal_cell()
+# cA1.reveal_cell()
+# cA2.reveal_cell()
 
