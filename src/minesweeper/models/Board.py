@@ -2,7 +2,7 @@ import random
 from Cell import Cell
 
 class Board:
-    def __init__(self, difficulty: str="normal", rows: int=None, columns: int=None, mines: int=None, cells: list[list[Cell]]=None):
+    def __init__(self, difficulty: str = "normal", rows: int = None, columns: int = None, mines: int = None, cells: list[list[Cell]] = None):
         self.difficulty = difficulty
         self.rows = rows
         self.columns = columns
@@ -91,12 +91,54 @@ class Board:
             print(" ".join(row_terminal_display))
     
     
-
+    def run_through_board(self):  # Print list of all cells objects and parameters
+        """Check function. Not used in running the game.
+        Vizualise all cells with their parameters info:
+        is_revealed, is_flagged, is_a_mine, adjacent_mines.
+        """
+        for row in self.cells:
+            for cell in row:
+                print(cell)
+                
+                
+    def count_adjacent_mines(self, x, y):
+        """Count all mines in the 8 adjacent cells of a cell.
+        Use the x, y coordinates of a cell to check the surrounding.
+        The count of mines (0 to 8) is then attributed to the specific cell.
+        """
+        mines_count = 0
+        adjacent_positions = [(-1, -1), (-1, 0), (-1, 1), 
+                              (0, -1),          (0, 1), 
+                              (1, -1), (1, 0), (1, 1)]
+        
+        for delta_x, delta_y in adjacent_positions:
+            new_x, new_y = x + delta_x, y + delta_y
+            if 0 <= new_x < self.rows and 0 <= new_y < self.columns:
+                if self.cells[new_x][new_y].is_a_mine:
+                    mines_count += 1
+        print(f"Cell ({x}, {y}) has {mines_count} adjacent mines")
+        self.cells[x][y].adjacent_mines = mines_count
+                
+                
+    def map_mines_count_all_cells(self):
+        """Run the count mines function through all board
+        Check all cells by rows and columns, count mines and attribute int to each one.
+        """
+        for x in range(self.rows):
+            for y in range(self.columns):
+                self.count_adjacent_mines(x, y)
+        # return print("*** END OF SETUP ***")
+                
+                
+                
     # tests
-my_board = Board("easy")
-my_board.generate_board()  # Generate premade board based on difficulty of Board
-my_board.display_board()
+# my_board = Board("easy")
+# my_board.generate_board()  # Generate premade board based on difficulty of Board
+# my_board.display_board()
 print("-"*30)
-my_custom_board = Board("custom", 3, 10, 8)  # Generate CUSTOM board, rows x col x mines
+my_custom_board = Board("custom", 4, 10, 15)  # Generate CUSTOM board, rows x col x mines
 my_custom_board.generate_board()
 my_custom_board.display_board()
+my_custom_board.map_mines_count_all_cells()
+my_custom_board.run_through_board()
+
