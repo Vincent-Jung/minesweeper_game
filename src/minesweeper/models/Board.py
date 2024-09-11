@@ -90,9 +90,6 @@ class Board:
             row_terminal_display = ["M" if cell.is_a_mine else "-" for cell in row]
             print(" ".join(row_terminal_display))
     
-        
-    def map_numbers(self):
-        pass
     
     def run_through_board(self):  # Print list of all cells objects and parameters
         """Check function. Not used in running the game.
