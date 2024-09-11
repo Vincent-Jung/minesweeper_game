@@ -33,9 +33,9 @@ class Minesweeper:
         self.reset_game(EASY)
         
     def load_sounds(self):
-        self.explosion_sound = pygame.mixer.Sound('src/demineur/asserts/audio/explosion.mp3')
-        self.swip_sound = pygame.mixer.Sound('src/demineur/asserts/audio/swip.mp3')
-        self.reset_sound = pygame.mixer.Sound('src/demineur/asserts/audio/wrong.mp3')
+        self.explosion_sound = pygame.mixer.Sound('src/minesweeper/assets/audio/explosion.mp3')
+        self.swip_sound = pygame.mixer.Sound('src/minesweeper/assets/audio/swip.mp3')
+        self.reset_sound = pygame.mixer.Sound('src/minesweeper/assets/audio/wrong.mp3')
     
     def reset_game(self, level):
         self.grid = self.create_grid(level)
