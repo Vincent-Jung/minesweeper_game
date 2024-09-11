@@ -1,86 +1,105 @@
 import random
-from pprint import pprint
-
 from Cell import Cell
 
-
 class Board:
-    # def __init__(self, cells: list[list[Cell]], difficulty: str, columns: int, rows: int, mines: int):
-    def __init__(self, difficulty: str="normal", columns: int="", rows: int="", mines: int=""):
-        # self.cells = cells
+    def __init__(self, difficulty: str="normal", rows: int=None, columns: int=None, mines: int=None, cells: list[list[Cell]]=None):
         self.difficulty = difficulty
-        self.columns = columns
         self.rows = rows
+        self.columns = columns
         self.mines = mines
+        self.cells = cells if cells is not None else []
 
-            # info difficulty
-        # EASY = 9x9, 10 mines
-        # NORMAL = 16x16, 40 mines
-        # HARD = 30x16, 99 mines
     
     def distribute_random_mines(self, total_of_mines):
+        """Randomly add mines to the game board
         
+        Args:
+            total_of_mines (int): number of mines max to be displayed regarding difficulty chosen.
+            
+        Returns:
+            self.cells: return cells, the "board" with a number of cells where the is_a_mine == True
+            equal to total_of_mines.
+        """
         max_row = self.rows - 1
         max_column = self.columns - 1
         print("rows = ", self.rows)
         print("columns = ", self.columns)
         print("Number of mines = ", self.mines)
+        
         mines_in_board = 0
         while mines_in_board < total_of_mines:
             row = random.randint(0, max_row)
             column = random.randint(0, max_column)
-            if board[row][column] == 1:
+
+            selected_cell = self.cells[row][column]
+            if selected_cell.is_a_mine == True:  # Avoid multiple mines on same cell. Position it on another cell.
                 continue
             else:
-                board[row][column] = 1
+                selected_cell.is_a_mine = True
                 mines_in_board += 1
-        return board
+        return self.cells
     
-    
-    def generate_board (self, col, row):
-        return [[0 for _ in range(col)] for _ in range(row)]  # 1st range = col, 2d range = rows
+
+    def _generate_board(self, row, col):
+        """Generate the basic matrix of the game. 
+        Called in generate_board function based on parameters selected.
+
+        Returns:
+            List: Matrix as the "board" of the game. List (col)of list(row) of Cell()
+        """
+        return [[Cell() for _ in range(col)] for _ in range(row)]
 
 
-    def _generate_board(self):
-        global board
-        board = None
+    def generate_board(self):
+        """Generate the board using parameters
+        Difficulties have premade rows, col and number of mines. Custom mode allows
+        for specific entries and shape a custom game.
+        Returns:
+            List: List of list of Cell() with exact number of mines on random positions.
+        """
         game_difficulty = self.difficulty
-        match game_difficulty:
-            case "easy":
-                print("easy mode")
-                self.columns = 9
-                self.rows = 9
-                self.mines = 10
-                board = self.generate_board(self.columns , self.rows)
-                self.distribute_random_mines(self.mines)
-            case "normal":
-                print("normal mode")
-                self.columns = 16
-                self.rows = 16
-                self.mines = 40
-                board = self.generate_board(self.columns , self.rows)
-                self.distribute_random_mines(self.mines)
-            case "hard":
-                print("hard mode")
-                self.columns = 20
-                self.rows = 16
-                self.mines = 99
-                board = self.generate_board(self.columns , self.rows)
-                self.distribute_random_mines(self.mines)
-            case "custom":
-                print("custom mode")
-                board = self.generate_board(self.columns , self.rows)
-                self.distribute_random_mines(self.mines)
+        if game_difficulty == "easy":
+            print("easy mode")
+            self.columns = 9
+            self.rows = 9
+            self.mines = 10
+        elif game_difficulty == "normal":
+            print("normal mode")
+            self.columns = 16
+            self.rows = 16
+            self.mines = 40
+        elif game_difficulty == "hard":
+            print("hard mode")
+            self.columns = 20
+            self.rows = 16
+            self.mines = 99
+        elif game_difficulty == "custom":
+            print("custom mode")
                 
-        pprint(board)
-        return board
+        self.cells = self._generate_board( self.rows, self.columns)
+        self.distribute_random_mines(self.mines)
+        return self.cells
     
+    
+    def display_board(self):
+        """Display the game board in terminal
+        Used to check the right size of the matrix, number of mines 
+        and their random positions in a visual way.
+        """
+        for row in self.cells:
+            row_terminal_display = ["M" if cell.is_a_mine else "-" for cell in row]
+            print(" ".join(row_terminal_display))
+    
+        
     def map_numbers(self):
         pass
     
 
+    # tests
 my_board = Board("easy")
-my_board._generate_board()  # Generate NORMAL base board full of 0
+my_board.generate_board()  # Generate premade board based on difficulty of Board
+my_board.display_board()
 print("-"*30)
-my_custom_board = Board("custom", 8, 5, 15)  # Generate CUSTOM base board full of 0
-my_custom_board._generate_board()
+my_custom_board = Board("custom", 3, 10, 8)  # Generate CUSTOM board, rows x col x mines
+my_custom_board.generate_board()
+my_custom_board.display_board()
