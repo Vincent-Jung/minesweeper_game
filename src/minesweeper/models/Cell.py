@@ -1,5 +1,5 @@
 class Cell:
-    def __init__(self, is_revealed: bool = False, is_flagged: bool = False, is_a_mine: bool = False, adjacent_mines: int = ""):
+    def __init__(self, is_revealed: bool = False, is_flagged: bool = False, is_a_mine: bool = False, adjacent_mines: int = None):
         self.is_revealed = is_revealed
         self.is_flagged = is_flagged
         self.is_a_mine = is_a_mine
@@ -24,17 +24,4 @@ class Cell:
             self.is_flagged = True
         else:
             self.is_flagged = False
-        
-    def calculate_number(self):
-        pass
-        
-
-        # Tests
-cA1 = Cell(False, False, False, 1)  # no Mine
-cA2 = Cell(False, False, True, 1)  # Mine !
-cA3 = Cell(False, True, False, 1)
-
-# print(cA1)
-# cA1.reveal_cell()
-# cA2.reveal_cell()
-
+                
