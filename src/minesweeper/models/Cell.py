@@ -13,10 +13,9 @@ class Cell:
         """Reveal a cell on the board
         """
         self.is_revealed = True
-        print(self)
-        if self.is_a_mine == True:
-            print("** BOOM Game over **")
-    
+        # print(self)
+
+
     def toggle_flag(self):
         """Toggle a non revealed cell with a flag
         Add a flag on non flagged cell, remove a flag on a flagged cell.
