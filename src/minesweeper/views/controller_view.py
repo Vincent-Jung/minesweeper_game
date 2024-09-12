@@ -26,6 +26,7 @@ class MinefieldController:
         if cell.is_a_mine and cell.is_revealed:
             self.view.game_over = True
             self.message = "You Lose !!!"
+            self.view.final_time = (pygame.time.get_ticks() - self.view.start_ticks) // 1000
         
             
     def reset_game(self):
@@ -34,7 +35,10 @@ class MinefieldController:
         self.model.generate_board()  # Générer la nouvelle grille
         self.model.map_mines_count_all_cells()  # Compter les mines adjacentes
         self.view.model = self.model  # Mettre à jour le modèle dans la vue
-        self.view.game_over = False  # Réinitialiser le statut du jeu
+        self.view.game_over = False 
+        self.view.start_ticks = 0
+        self.view.timer_started = False
+        self.view.final_time = 0 # Réinitialiser le statut du jeu
         self.message = "New Game Started"  # Mettre à jour le message de réinitialisation
         print("New game started!")  # Debugging message 
         
@@ -47,11 +51,17 @@ class MinefieldController:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                # reset button was push
-                elif event.type == pygame.MOUSEBUTTONDOWN and self.view.button_reset.collidepoint(event.pos):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if not self.view.timer_started:
+                        self.view.start_ticks = pygame.time.get_ticks()
+                        self.view.timer_started = True
+                    if self.view.button_reset.collidepoint(event.pos):
                         self.reset_game()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    self.handle_click(event.pos, event.button)
+                    else:
+                        self.handle_click(event.pos, event.button)
+                # reset button was push
+                    
+                    
        
             # Si le jeu est terminé, on quitte la boucle
             if self.view.game_over:

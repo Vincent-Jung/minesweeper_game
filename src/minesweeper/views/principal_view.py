@@ -8,6 +8,7 @@ FLAG = "tomato1"
 RESET = "darkseagreen1"
 GREY = "seashell1"
 BG ="grey100"
+BLACK = "black"
 #--------------- class views ---------------#
 
 class PrincipalView:
@@ -36,7 +37,21 @@ class PrincipalView:
         # reset button parameters
         self.x_button_reset = ((self.width+self.offset_x)//2)
         self.y_button_restet = self.height+self.offset_y+self.cell_size//2
-        self.button_reset = pygame.Rect(self.x_button_reset, self.y_button_restet, (self.cell_size), self.cell_size)
+        self.button_reset = pygame.Rect(self.x_button_reset, self.y_button_restet, self.cell_size, self.cell_size)
+        
+        # timer game
+        self.start_ticks = 0
+        self.timer_started = False
+        self.final_time = 0
+        self.position_timer = (self.width + self.offset_x + 127, 92)
+        
+        # select level Box
+        self.coor_x_box = self.width + self.offset_x + 30
+        self.level_box = pygame.Rect(self.coor_x_box, 154, 320 , 93)
+        # Message Box
+        self.message_box = pygame.Rect(self.coor_x_box, 247, 320, 63)
+        self.message = "lol"
+
         
         # offset image buttons
     def center_image_in_button(self,button_rect, image):
@@ -85,6 +100,17 @@ class PrincipalView:
         self.button_reset=pygame.draw.rect(self.screen, (RESET), self.button_reset)
         self.image_rect = self.center_image_in_button(self.button_reset, self.reset_image)
         self.screen.blit(self.reset_image, self.image_rect)
+        # draw the game timer
+        font = pygame.font.Font(None, 30)
+        seconds = (pygame.time.get_ticks() - self.start_ticks) // 1000 if self.timer_started and not self.game_over else self.final_time
+        txt = f"Time: {seconds} sec"
+        time_text = font.render(txt, True, BLACK)
+        self.screen.blit(time_text, self.position_timer)
+        # draw the level box
         
+        # draw the message box
+        font = pygame.font.Font(None, 30)
+        message_text = font.render(self.message, True, BLACK)
+        pygame.draw.rect(screen, color,rec)
     def update(self):
         pygame.display.flip()
