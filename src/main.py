@@ -1,4 +1,4 @@
-from minesweeper.views.controller_view import MinefieldController
+from minesweeper.controllers.controller_view import MinefieldController
 from minesweeper.views.principal_view import PrincipalView
 from minesweeper.models.GameState import GameState
 
