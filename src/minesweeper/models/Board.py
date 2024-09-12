@@ -129,32 +129,53 @@ class Board:
                 self.count_adjacent_mines(x, y)
         # return print("*** END OF SETUP ***")
                 
+                
+    def reveal_area(self, x, y):
+        """
+        Recursively reveal the cells starting from (x, y).
+        If the current cell has 0 adjacent mines, it will reveal surrounding cells.
+        """
+        if not (0 <= x < self.rows and 0 <= y < self.columns):
+            return  # Out of bounds check
+
+        cell = self.cells[x][y]
+
+        if cell.is_revealed or cell.is_flagged:  # If cell is already revealed or flagged, stop
+            return
+
+        cell.reveal_cell()
+
+        # If the cell has adjacent mines, do not propagate further
+        if cell.adjacent_mines > 0:
+            return
+
+        # If adjacent_mines is 0, recursively reveal all adjacent cells
+        adjacent_positions = [(-1, -1), (-1, 0), (-1, 1), 
+                              (0, -1),          (0, 1), 
+                              (1, -1), (1, 0), (1, 1)]
+        
+        for delta_x, delta_y in adjacent_positions:
+            new_x, new_y = x + delta_x, y + delta_y
+            self.reveal_area(new_x, new_y)
+            
+            
+    def click_a_cell(self, x, y):
+        """Handle the event when a player clicks a cell at (x, y)."""
+        clicked_cell = self.cells[x][y]
+        if clicked_cell.is_a_mine:
+            print(f"Cell ({x}, {y}) is a mine! Game over.")
+        else:
+            self.reveal_area(x, y) 
+                
+                
     def ready_board(self):
-        my_custom_board = Board("custom", 4, 8, 15)  # Generate CUSTOM board, rows x col x mines
+        """Pack all settings of the game board
+        To be called when game state start a game.
+        """
+        # my_custom_board = Board("custom", 4, 8, 15)  # Generate CUSTOM board, rows x col x mines
+        my_custom_board = Board(self.difficulty)
         my_custom_board.generate_board()
         my_custom_board.display_board()
         my_custom_board.map_mines_count_all_cells()
         my_custom_board.run_through_board()
-        
-    def click_a_cell(self, x, y):
-        clicked_cell = self.cells[x][y]
-        clicked_cell.reveal_cell()
 
-                
-    # tests
-# my_board = Board("hard")
-# my_board.generate_board()  # Generate premade board based on difficulty of Board
-# my_board.display_board()
-# my_board.map_mines_count_all_cells()
-# my_board.run_through_board()
-# print("-"*30)
-my_custom_board = Board("custom", 3, 3, 3)  # Generate CUSTOM board, rows x col x mines
-my_custom_board.generate_board()
-my_custom_board.display_board()
-my_custom_board.map_mines_count_all_cells()
-
-my_custom_board.click_a_cell(0, 0)
-# my_custom_board.click_a_cell(1, 2)
-# my_custom_board.click_a_cell(2, 0)
-print("*** check board ***")
-my_custom_board.run_through_board()
