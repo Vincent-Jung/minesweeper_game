@@ -1,12 +1,11 @@
 from minesweeper.views.controller_view import MinefieldController
 from minesweeper.views.principal_view import PrincipalView
-from minesweeper.models.Board import Board
+from minesweeper.models.GameState import GameState
 
 if __name__ == '__main__':
-    board = Board(difficulty="easy")
-    board.generate_board()
-    board.map_mines_count_all_cells()  # Compte les mines adjacentes
+    game_state = GameState()
+    game_state.initialize(difficulty="easy")
 
-    view = PrincipalView(board)
-    controller = MinefieldController(board, view)
+    view = PrincipalView(game_state.board, game_state)
+    controller = MinefieldController(game_state.board, view)
     controller.run()

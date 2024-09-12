@@ -70,7 +70,7 @@ class Board:
             self.mines = 40
         elif game_difficulty == "hard":
             print("hard mode")
-            self.columns = 20
+            self.columns = 30
             self.rows = 16
             self.mines = 99
         elif game_difficulty == "custom":
@@ -127,7 +127,6 @@ class Board:
         for x in range(self.rows):
             for y in range(self.columns):
                 self.count_adjacent_mines(x, y)
-        # return print("*** END OF SETUP ***")
                 
                 
     def reveal_area(self, x, y):
