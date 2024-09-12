@@ -7,26 +7,33 @@ class MinefieldController:
         self.message = ""
 
     def handle_click(self, pos, button):
-        """Gérer le clic de l'utilisateur sur une cellule
+        """Gérer le clic de l'utilisateur sur une cellule.
+        
         Args:
-            pos: tuple (x, y) des coordonnées du clic
-            button: bouton de la souris (1 = clic gauche, 3 = clic droit)
+            pos: tuple (x, y) des coordonnées du clic.
+            button: bouton de la souris (1 = clic gauche, 3 = clic droit).
         """
         row = (pos[1] - self.view.offset_y) // self.view.cell_size
         col = (pos[0] - self.view.offset_x) // self.view.cell_size
-        cell = self.model.cells[row][col]
 
-        if button == 1:  # Clic gauche, révéler la cellule
-            if not cell.is_flagged:
-                cell.reveal_cell()
-        elif button == 3:  # Clic droit, marquer/démarquer la cellule avec un drapeau
-            cell.toggle_flag()
+        # Vérification que le clic est bien à l'intérieur du plateau
+        if 0 <= row < self.model.rows and 0 <= col < self.model.columns:
+            cell = self.model.cells[row][col]
 
-        # Vérifier si le jeu est terminé (révélé une mine)
-        if cell.is_a_mine and cell.is_revealed:
-            self.view.game_over = True
-            self.message = "You Lose !!!"
-            self.view.final_time = (pygame.time.get_ticks() - self.view.start_ticks) // 1000
+            if button == 1:  # Clic gauche, révéler la cellule
+                if not cell.is_flagged:  # On ne révèle pas une cellule marquée comme drapeau
+                    if cell.is_a_mine and cell.is_revealed:
+                        # Si c'est une mine, on termine le jeu
+                        self.view.game_over = True
+                        self.message = "You Lose !!!"
+                        self.view.final_time = (pygame.time.get_ticks() - self.view.start_ticks) // 1000
+                    else:
+                        # Sinon, on appelle la fonction reveal_area pour révéler la cellule et ses adjacentes
+                        self.model.reveal_area(row, col)
+
+            elif button == 3:  # Clic droit, marquer/démarquer la cellule avec un drapeau
+                cell.toggle_flag()
+
         
             
     def reset_game(self):
@@ -54,12 +61,13 @@ class MinefieldController:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if not self.view.timer_started:
                         self.view.start_ticks = pygame.time.get_ticks()
-                        self.view.timer_started = True
+                        self.view.timer_started = True 
+                        # reset button was push
                     if self.view.button_reset.collidepoint(event.pos):
                         self.reset_game()
                     else:
                         self.handle_click(event.pos, event.button)
-                # reset button was push
+               
                     
                     
        

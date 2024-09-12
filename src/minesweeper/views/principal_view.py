@@ -1,6 +1,4 @@
 import pygame
-from minesweeper.models.Cell import Cell
-from minesweeper.models.Board import Board
 
 #--------------- constants colors ---------------#
 SQUARE = "peachpuff1"
@@ -70,7 +68,7 @@ class PrincipalView:
 
         
     def draw(self):
-        self.screen.fill((FLAG))  # Background color
+        self.screen.fill((BG))  # Background color
         for row in range(self.model.rows):
             for col in range(self.model.columns):
                 cell = self.model.cells[row][col]
@@ -111,6 +109,6 @@ class PrincipalView:
         # draw the message box
         font = pygame.font.Font(None, 30)
         message_text = font.render(self.message, True, BLACK)
-        pygame.draw.rect(screen, color,rec)
+        #pygame.draw.rect(screen, color,rec)
     def update(self):
         pygame.display.flip()
