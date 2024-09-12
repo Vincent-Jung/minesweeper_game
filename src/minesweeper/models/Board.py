@@ -1,5 +1,5 @@
 import random
-from Cell import Cell
+from minesweeper.models.Cell import Cell
 
 class Board:
     def __init__(self, difficulty: str = "normal", rows: int = None, columns: int = None, mines: int = None, cells: list[list[Cell]] = None):
