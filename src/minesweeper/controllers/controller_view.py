@@ -1,9 +1,8 @@
 import pygame
 from minesweeper.models.Board import Board
-from minesweeper.models.GameState import GameState
 
 class MinefieldController:
-    def __init__(self, model, view):
+    def __init__(self, model, view,app):
         """
         Initialize the MinefieldController class.
 
@@ -13,6 +12,7 @@ class MinefieldController:
         """
         self.model = model  # Board instance
         self.view = view
+        self.app = app # AppController instance
         self.message = ""
 
     def handle_click(self, pos, button):
@@ -68,6 +68,13 @@ class MinefieldController:
         self.view.timer_started = False
         self.view.final_time = 0  # Reset game status
         self.view.message = "New Game Started"  # Update reset message
+        
+    def new_screen(self, difficulty):
+        """
+        Create a new game screen for the selected level
+        """
+        app_controller = self.app(difficulty)
+        app_controller.load_app()
         
     def run(self):
         """
